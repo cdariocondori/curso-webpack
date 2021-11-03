@@ -5,6 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin')
 //minificando no va en modo dev 
 //enviroments
 const Dotenv = require('dotenv-webpack')
+//reportes para mejorar codigo
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     // mode: 'production', // LE INDICO EL MODO EXPLICITAMENTE
@@ -22,6 +24,7 @@ module.exports = {
     mode: 'development',
     //liver server build
     //watch: true,//compile live reload
+    devtool: 'source-map',
     resolve: {
         extensions: ['.js'], // LOS ARCHIVOS QUE WEBPACK VA A LEER
         //PARA EVITAR EN LOS IMPORT ../../../../ VAMOS A CREAR SHOORTHCUTS
@@ -75,6 +78,7 @@ module.exports = {
                 }
             }
         ]
+
     },
     // SECCION DE PLUGINS
     plugins: [
@@ -97,8 +101,17 @@ module.exports = {
                 }
             ]
         }),
-        new Dotenv()
+        new Dotenv(),
+        new BundleAnalyzerPlugin()
     ],
     //minificando no es necesario en dev
+    //LIVE RELOAD 
+    devServer: {
+        static: path.join(__dirname, 'dist'),
+        compress: true,
+        historyApiFallback: true,
+        port: 3000,
+        open: true
+    }
 
 }
